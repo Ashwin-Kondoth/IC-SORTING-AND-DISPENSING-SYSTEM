@@ -25,8 +25,8 @@ db = TinyDB('IC_db.json')
 User = Query()
 db2 = TinyDB('USER_db.json')
 User2 = Query()
-DIR = 26   # Direction GPIO Pin
-STEP = 7  # Step GPIO Pin
+DIR = 26   
+STEP = 7  
 in1 = 22
 in2 = 11
 sensor = 4
@@ -42,7 +42,7 @@ GPIO.setup(STEP, GPIO.OUT)
 GPIO.output(DIR, 1)
 GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 buttonstate = GPIO.input(27)
-MODE = (14, 15, 23)   # Microstep Resolution GPIO Pins
+MODE = (14, 15, 23)   
 GPIO.setup(MODE, GPIO.OUT)
 RESOLUTION = {'Full': (0, 0, 0),
               'Half': (1, 0, 0),
@@ -58,20 +58,19 @@ L2 = 6
 L3 = 13
 L4 = 19
 
-# These are the four columns
+
 C1 = 12
 C2 = 16
 C3 = 20
 C4 = 21
 
-# The GPIO pin of the column of the key that is currently
-# being held down or -1 if no key is pressed
+
 keypadPressed = -1
 
 
 inputted = ""
 
-# Setup GPIO
+
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
@@ -80,14 +79,13 @@ GPIO.setup(L2, GPIO.OUT)
 GPIO.setup(L3, GPIO.OUT)
 GPIO.setup(L4, GPIO.OUT)
 
-# Use the internal pull-down resistors
+
 GPIO.setup(C1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(C2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(C3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(C4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-# This callback registers the key that was pressed
-# if no other key is currently pressed
+
 GPIO.setwarnings(False)
 def search():
     results11 = (db.search(User.PartNumber == output1))
@@ -131,7 +129,7 @@ def stepper(step_count, rotation):
     GPIO.setup(DIR, GPIO.OUT)
     GPIO.setup(STEP, GPIO.OUT)
     GPIO.output(DIR, rotations)
-    MODE = (14, 15, 23)  # Microstep Resolution GPIO Pins
+    MODE = (14, 15, 23)  
     GPIO.setup(MODE, GPIO.OUT)
     RESOLUTION = {'Full': (0, 0, 0),
                   'Half': (1, 0, 0),
@@ -167,7 +165,7 @@ def stepper2(step_count, rotation):
     GPIO.setup(DIR, GPIO.OUT)
     GPIO.setup(STEP, GPIO.OUT)
     GPIO.output(DIR, rotation)
-    MODE = (14, 15, 23)  # Microstep Resolution GPIO Pins
+    MODE = (14, 15, 23)  
     GPIO.setup(MODE, GPIO.OUT)
     RESOLUTION = {'Full': (0, 0, 0),
                   'Half': (1, 0, 0),
@@ -203,16 +201,13 @@ def keypadCallback(channel):
     if keypadPressed == -1:
         keypadPressed = channel
 
-# Detect the rising edges on the column lines of the
-# keypad. This way, we can detect if the user presses
-# a button when we send a pulse.
+
 GPIO.add_event_detect(C1, GPIO.RISING, callback=keypadCallback)
 GPIO.add_event_detect(C2, GPIO.RISING, callback=keypadCallback)
 GPIO.add_event_detect(C3, GPIO.RISING, callback=keypadCallback)
 GPIO.add_event_detect(C4, GPIO.RISING, callback=keypadCallback)
 
-# Sets all lines to a specific state. This is a helper
-# for detecting when the user releases a button
+
 def setAllLines(state):
     GPIO.output(L1, state)
     GPIO.output(L2, state)
@@ -238,12 +233,10 @@ def checkSpecialKeys():
 
     return pressed
 
-# reads the columns and appends the value, that corresponds
-# to the button, to a variable
+
 def readLine(line, characters):
     global inputted
-    # We have to send a pulse on each line to
-    # detect button presses
+   
     GPIO.output(line, GPIO.HIGH)
     if(GPIO.input(C1) == 1):
         inputted = inputted + characters[0]
@@ -258,15 +251,14 @@ def readLine(line, characters):
 def keypadinput():
     global keypadPressed
     while True:
-        # If a button was previously pressed,
-        # check, whether the user has released it yet
+        
         if keypadPressed != -1:
             setAllLines(GPIO.HIGH)
             if GPIO.input(keypadPressed) == 0:
                 keypadPressed = -1
             else:
                 time.sleep(0.1)
-        # Otherwise, just read the input
+       
         else:
             if not checkSpecialKeys():
                 readLine(L1, ["1","2","3","A"])
