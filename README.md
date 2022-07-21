@@ -100,3 +100,5 @@ Your ServiceAccountToken file should look something like this:
   "client_x509_cert_url": "googleapis.com/robot/v1/metadata/x509/ic-detection%40ic-detection.iam.gserviceaccount.com"
   
 }
+
+Place the ServiceAccountToken.json file in main program folder
